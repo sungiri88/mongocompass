@@ -1,5 +1,5 @@
-﻿$packageName = 'mongodbcompass'
-$packageSearch = "mongodb*"
+﻿$packageName = 'mongocompass'
+$packageSearch = "mongo*"
 $installerType = 'exe'
 $silentArgs = '/quiet /qn /norestart'
 $validExitCodes = @(0,3010)
