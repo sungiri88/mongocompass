@@ -1,7 +1,7 @@
 ﻿$ErrorActionPreference = 'Stop'
  
 $packageName         = 'mongocompass'
-$softwareNamePattern = 'mongo'
+$softwareNamePattern = 'MongoDB *'
  
  
 [array] $key = Get-UninstallRegistryKey $softwareNamePattern
@@ -14,8 +14,16 @@ if ($key.Count -eq 1) {
             validExitCodes         = @(0,3010)
             file                   = ''
         }
-        $packageArgs.file = "$($_.UninstallString.Replace(' /x86=0', ''))"   
-        Uninstall-ChocolateyPackage @packageArgs
+	$packageArgs['file'] = "$($_.UninstallString)"
+
+	$fileStringSplit = $packageArgs['file'] -split '\s+(?=(?:[^"]|"[^"]*")*$)'
+
+	if($fileStringSplit.Count -gt 1) {
+  	$packageArgs['file'] = $fileStringSplit[0]
+  	$env:chocolateyInstallArguments += " $($fileStringSplit[1..($fileStringSplit.Count-1)])"
+	}
+
+	Uninstall-ChocolateyPackage @packageArgs
     }
 }
 elseif ($key.Count -eq 0) {
